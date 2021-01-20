@@ -59,15 +59,15 @@ app.layout = html.Div([
         #         'backgroundColor': 'rgb(248,255,30)'
         #     }
         # ]
-        style_data_conditional=[
-            {
-                'if': {'column_id':'year',
-                       'filter_query':'{year} eq 2010'
-
-                      },
-                'backgroundColor': 'rgb(248,255,30)'
-            }
-        ],
+        # style_data_conditional=[
+        #     {
+        #         'if': {'column_id':'year',
+        #                'filter_query':'{year} eq 2010'
+        #
+        #               },
+        #         'backgroundColor': 'rgb(248,255,30)'
+        #     }
+        # ],
 
         # style_header={'font-size': '14px', 'padding': '2px 22px', 'span': '13px',
         #               'fontWeight': 'bold', 'margin': '5px',
@@ -85,13 +85,13 @@ app.layout = html.Div([
         #             'whiteSpace': 'normal'
         #             }
 
-        # style_data_conditional=[ {
-        #     'if': {
-        #         'column_id': str(x),
-        #     },
-        #     'backgroundColor': 'dodgerblue',
-        #     'color': 'white' } for x in [ y for y in df.columns if y in ['country','year'] ]
-        # ]
+        style_data_conditional=[ {
+            'if': {
+                'column_id': str(x),
+            },
+            'backgroundColor': 'dodgerblue',
+            'color': 'white' } for x in [ y for y in df.columns if y in ['country','year'] ]
+        ]
 
     )
 

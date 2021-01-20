@@ -8,6 +8,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import seaborn as sns
 from plotly.subplots import make_subplots
+
 app = dash.Dash(__name__)
 df = pd.read_csv("Dataset/Sales_April_2019.csv").dropna()
 
@@ -50,6 +51,7 @@ def cleaning_data(df):
 df = cleaning_data(df)
 
 app.layout = html.Div([
+
     dash_table.DataTable(
         id='Table',
 
@@ -67,13 +69,40 @@ app.layout = html.Div([
         page_current=0,
         column_selectable="multi",
         page_size=10,
-        style_header={'overflow': 'hidden', 'textOverflow': 'ellipsis', 'whiteSpace': 'normal', 'span': '13px'},
-        style_table={'height': 400, 'overflowX': 'auto', 'overflowY': 'auto'},
-        style_cell={'overflow': 'hidden', 'textOverflow': 'ellipsis', 'minWidth': '0px', 'width': '0px', 'maxWidth': '0px'},
-        # style_data={"overflow": "hidden", 'border': '#393E3', 'backgroundColor': '#393E3E ', 'color': '#D0D3D4',
-        #             'span': '13px'}
+        tooltip=
+        {i: {
+            'value': i,
+            'use_with': 'both'  # both refers to header & data cell
+        } for i in df.columns},
+        css=[{
+            'selector': '.dash-table-tooltip',
 
+            'rule': 'background-color: white; font-family: monospace; max-width: 2px;'
+        }],
+
+        # style_header_conditional=[{
+        #     'if': {
+        #         'column_id': str(x),
+        #     },
+        #     'overflow': 'hidden', 'textOverflow':
+        #         'ellipsis'
+        #     } for x in df.columns
+        # ],
+        style_header={
+            'textOverflow': 'ellipsis',
+            'textDecoration': 'underline',
+            'textDecorationStyle': 'dotted',
+        },
+        # style_header={'overflow': 'hidden', 'textOverflow': 'ellipsis', 'minWidth': 95, 'maxWidth': 195},
+        style_table={'height': 400, 'overflowX': 'auto', 'overflowY': 'auto'},
+        style_cell={'overflow': 'hidden', 'textOverflow': 'ellipsis', 'minWidth': 95, 'maxWidth': 95},
+        # style_data={"overflow": "hidden",
+        #             'textOverflow': 'ellipsis'}
+        tooltip_delay=0,
+
+        tooltip_duration=None
     ),
+
     html.Br(),
     html.Br(),
     html.Br(),
@@ -98,19 +127,19 @@ def update_layout(value):
         # fig.update_traces(texttemplate='%{text:.2s}', textposition='outside' )
 
         fig = make_subplots(
-            rows=1, cols=2,horizontal_spacing=0.1)
+            rows=1, cols=2, horizontal_spacing=0.1)
         dt = pd.DataFrame(value)
-        print(dt.head())
-        for j,i in enumerate(['city','state_zip']):
+
+        for j, i in enumerate(['city', 'state_zip']):
             dk = dt.groupby(i, as_index=False).agg({'Quantity Ordered': sum})
             dk = dk.sort_values(by='Quantity Ordered')
 
-            fig1=px.bar(dk, x=i, y='Quantity Ordered', color="Quantity Ordered", text='Quantity Ordered')
+            fig1 = px.bar(dk, x=i, y='Quantity Ordered', color="Quantity Ordered", text='Quantity Ordered')
 
             fig1.update_xaxes(title_text=i, row=1, col=j)
             fig1.update_yaxes(title_text="Quantity Ordered", row=1, col=j)
 
-            fig.add_trace(fig1.data[0],row=1,col=j+1)
+            fig.add_trace(fig1.data[0], row=1, col=j + 1)
 
         fig.update_xaxes(title_text="city", row=1, col=1)
         fig.update_yaxes(title_text="Quantity Ordered", row=1, col=1)
