@@ -14,7 +14,8 @@ from flask_failsafe import failsafe
 def create_app():
     # note that the import is *inside* this function so that we can catch
     # errors that happen at import time
-    from intro_plotly  import  app
+    # from intro_plotly  import  app
+    from bar_plotly import app
     return app.server
 
 
