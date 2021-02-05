@@ -90,14 +90,14 @@ fig = px.bar(pf,
              'city', 'Quantity Ordered',
              barmode='relative',
              width=1200,
-             height=600,
+             height=800,
              text='Quantity Ordered',
              # labels={},
-             template='xgridoff',
+             template='ggplot2',
              animation_frame='ord_date_day',
              range_y=[0,20],
              category_orders={'ord_date_day':[i for i in range(1,32)]},
-
+             color='city'
              # ['ggplot2', 'seaborn', 'simple_white', 'plotly',
              #  'plotly_white', 'plotly_dark', 'presentation', 'xgridoff',
              #  'ygridoff', 'gridon', 'none']
