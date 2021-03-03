@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>database</title>
+</head>
+<body>
+<table  border = 0.5>
+         {% for filed  in filed_names %}
+
+               <th> {{ filed }} </th>
+         {% endfor %}
+          {% for row  in data %}
+                  <tr>
+                  {% for i in row %}
+                      <td> {{ i }} </td>
+
+                      {% endfor %}
+                  </tr>
+         {% endfor %}
+
+
+      </table>
+</body>
+</html>
