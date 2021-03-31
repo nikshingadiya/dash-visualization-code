@@ -1,31 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>Login Form</title>
-    <link href="{{ url_for('static',filename='styles/login.css') }}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
 
 </head>
 <body>
-<h2>Login Page</h2><br>
 <div class="login">
-    <form action="login.php" id="login" method="get">
-        <label><b>User Name
-        </b>
-        </label>
-        <input id="Uname" name="Uname" placeholder="Username" type="text">
-        <br><br>
-        <label><b>Password
-        </b>
-        </label>
-        <input id="Pass" name="Pass" placeholder="Password" type="Password">
-        <br><br>
-        <input id="log" name="log" type="button" value="Log In Here">
-        <br><br>
-        <input id="check" type="checkbox">
-        <span>Remember me</span>
-        <br><br>
-        Forgot <a href="#">Password</a>
+  <h1>Login</h1>
+    <form method="post">
+      <input type="text" name="u" placeholder="Username" required="required" />
+        <input type="password" name="p" placeholder="Password" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
     </form>
 </div>
+
+
+
 </body>
 </html>

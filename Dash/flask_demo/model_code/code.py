@@ -4,6 +4,7 @@ import  scipy.stats as st
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
+from  imblearn.under_sampling import RandomUnderSampler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -34,6 +35,7 @@ for i in fd_ori.columns:
             l1.append((i, x))
 
 #  feature seperate
+print(l1)
 
 basic_f0 = []
 for i in l1:
@@ -52,7 +54,7 @@ X, y =nm.fit_resample(X,y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
 
 # Build model
-clf = RandomForestClassifier(max_depth=3, min_samples_split=4)
+clf = RandomForestClassifier(max_depth=6, min_samples_split=4)
 clf.fit(X_train, y_train)
 print("Score: ", clf.score(X_test, y_test))
 

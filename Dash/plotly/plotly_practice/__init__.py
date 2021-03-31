@@ -8,10 +8,11 @@ def create_app():
     # from intro_plotly  import  app
     # from bar_plotly import app
     # from Datatable_dashbord import app
-    # from sunbrust import  app
+    # from sunbrust import
+    from bar_plotly import  app
 
     # from Scatter3D import app
-    from youtube.bar_youtube import app
+    from bar_plotly import app
 
     return app.server
 

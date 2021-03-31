@@ -1,4 +1,5 @@
 import mysql.connector
+import  numpy as np
 try :
     mydb = mysql.connector.connect(
         host="localhost",
@@ -61,18 +62,31 @@ def insert_values(data):
 
 
 def get_data():
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="nikhil1234?",
-        database="customer_review"
-    )
-    con = mydb.cursor()
-    sql = "select * from customers_feedback;"
-    x=con.execute(sql)
-    data =con.fetchall()
-    field_names = [i[0] for i in con.description]
+    try:
+        con = mydb.cursor()
+        sql = "select * from customers_feedback;"
+        x=con.execute(sql)
+        data =con.fetchall()
+        field_names = [i[0] for i in con.description]
 
-    print(data)
-    return(field_names,data)
+        print(data)
+        return(field_names,data)
+    except:
+        print("Fetching data failed")
+        con.close()
+        return 0
+def get_admin_data():
+    try:
+        con = mydb.cursor()
+        sql = "select * from admin;"
+        x = con.execute(sql)
+        data = con.fetchall()
+        field_names = [i[0] for i in con.description]
+
+
+        return (data)
+    except:
+        print("Fetching data failed")
+        con.close()
+        return 0
 

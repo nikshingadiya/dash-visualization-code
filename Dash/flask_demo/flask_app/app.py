@@ -9,7 +9,7 @@ app = Flask(__name__)
 from encoding_input_data import enc_dict
 
 create_tabel()
-
+np.random.seed(25)
 '''['Age',
  'Ease and convenient',
  'Time saving',
@@ -44,9 +44,14 @@ def encoding_data(enc_dict={}, dec_dict={}):
     return np.array(list_enc).reshape(1, -1)
 
 
+def random():
+    return np.random.randint(0, 235633)
+
+
 def predction(pred_values):
     model = pickle.load(open('model.pkl', 'rb'))
     output = model.predict(pred_values)
+    print(output)
     if (output == 1):
         return "Yes"
     else:
@@ -56,6 +61,7 @@ def predction(pred_values):
 @app.route('/', methods=['POST', 'GET'])
 def form_submit():
     y = 0
+    x = 0
     if request.method == 'POST':
 
         values = request.form.to_dict()
@@ -65,17 +71,21 @@ def form_submit():
         values['Output'] = predction(pre_array)
 
         from database import insert_values
-        y = insert_values(values.values())
-        return redirect(url_for('submission', flag=y))
+        x = insert_values(values.values())
+        y = random()
+        return redirect(url_for('submission', flag=f"{x},{y}"))
     else:
-
         return render_template('index.html')
 
 
 @app.route('/submit_sucess/<flag>')
 def submission(flag):
-    print(type(flag))
-    if (flag == '1'):
+    print(flag)
+    flag = flag.split(",")
+    results = list(map(int, flag))
+    print(results)
+
+    if (results[0] == 1):
         return render_template('submit_success.html')
     else:
         return render_template('unsuccessful.html')
@@ -86,13 +96,25 @@ def about():
     return "<h2>hi im nikhil</h2>"
 
 
-@app.route('/html_login')
+@app.route('/html_login', methods=['POST', 'GET'])
 def login():
+    if request.method == 'POST':
+
+        values = request.form.to_dict()
+        get_username = values['u']
+        get_password = values['p']
+
+        from database import get_admin_data
+        x = get_admin_data()
+        if (x[0][0] == get_username and x[0][1] == get_password):
+            return redirect(url_for('fetch_data'))
+        else:
+            return render_template('invalid.html')
     return render_template('html_login.html')
 
 
-@app.route("/fetch_data")
-def featch_data():
+@app.route("/admin/fetch_data")
+def fetch_data():
     from database import get_data
     field_names, data = get_data()
     print(field_names, data)

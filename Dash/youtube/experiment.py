@@ -1,10 +1,10 @@
 import time
-
+from timeit import default_timer as timer
 s = time.time()
 import re
 import modin.pandas as pd
 import dash
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output,State
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
@@ -23,9 +23,9 @@ yt = pd.read_csv("./assets/data/CAvideos.csv")
 e = time.time()
 print("importing_time", e - s)
 
+
+
 s = time.time()
-
-
 def search_words(text):
     result = re.findall(r'\w+', text)
     result = result[0:3]
@@ -64,11 +64,10 @@ yt = clean_data(yt)
 
 s = time.time()
 
-
 # print(yt.head())
 def top_10_trending_videos(df=None):
     from filtter_data import top_treanding
-    df = top_treanding(df)
+    df=top_treanding(df)
 
     fig = px.bar(df, x='likes/views', y='video_short_names',
                  hover_data={'video_short_names': True},
@@ -80,8 +79,7 @@ def top_10_trending_videos(df=None):
                  text='likes/views',
                  orientation='h', range_x=(0, 0.6),
                  )
-    fig.update_layout(margin=dict(t=40, b=0, l=0, r=0), plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E')
+    fig.update_layout(margin=dict(t=40, b=0, l=0, r=0))
 
     fig.update_yaxes(automargin=True)
 
@@ -91,6 +89,8 @@ def top_10_trending_videos(df=None):
     fig['layout']['updatemenus'][0]['pad'] = dict(r=5, t=60)
     fig['layout']['sliders'][0]['pad'] = dict(r=5, t=40)
     fig.update_traces(textposition='auto')
+    fig.update_layout(plot_bgcolor='#673435',
+                      paper_bgcolor='#ADBC6E')
 
     ht = html.Div(
         dbc.Card
@@ -110,7 +110,7 @@ def top_10_trending_videos(df=None):
 
 def most_likes_video(df_data=None):
     from filtter_data import most_likes
-    df_data = most_likes(df_data)
+    df_data=most_likes(df_data)
 
     fig = px.bar(data_frame=df_data,
                  # title=f"Video vs Likes Date:{dt}",
@@ -148,7 +148,7 @@ def most_likes_video(df_data=None):
 
 def most_views_video(df_data=None):
     from filtter_data import most_views
-    df_data = most_views(df_data)
+    df_data= most_views(df_data)
     fig = px.bar(data_frame=df_data,
                  # template='plotly_dark',
 
@@ -207,7 +207,7 @@ app.layout = html.Div([
                 dbc.Row(
                     [
                         dbc.Col([
-                            main_title()
+                            # main_title()
                         ], width=12),
 
                     ], align='center', justify="around"),
@@ -215,12 +215,13 @@ app.layout = html.Div([
                 dbc.Row([
                     dbc.Col(
                         [
-                            top_10_trending_videos(df=yt),
+                            # top_10_trending_videos(df=yt),
+
 
                         ], width={'size': 8}),
                     dbc.Col(
                         [
-                            stastics_table(yt),
+                            # stastics_table(yt),
 
                         ], width={'size': 4}),
 
@@ -229,12 +230,12 @@ app.layout = html.Div([
                 dbc.Row([
                     dbc.Col(
                         [
-                            most_views_video(df_data=yt),
+                            # most_views_video(df_data=yt),
 
                         ], width={'size': 6}),
                     dbc.Col(
                         [
-                            most_likes_video(df_data=yt)
+                           # most_likes_video(df_data=yt)
                         ], width={'size': 6}
                     ),
                 ], align='center'),
@@ -248,12 +249,11 @@ app.layout = html.Div([
                     )
 
                 ),
-                html.Br(),
                 dbc.Row
                     (
                     dbc.Col(
                         [
-                            view_analysis(yt)
+                            # view_analysis(yt)
                         ], width={'size': 12}
                     )
 
@@ -261,48 +261,57 @@ app.layout = html.Div([
 
             ]
         ), color='grey'
-    ), dcc.Store(
-        id='clientside-store-figure', data={}
     ),
-    dcc.Store("id-channel-storage", data={}),
-    dcc.Store("id-channel-storage1", data={}),
-    dcc.Store("time-series-data", data={})
+    dcc.Store("id-channel-storage",data={}),
+    dcc.Store("id-channel-storage1",data={})
+
 
 ])
 
 
-@app.callback(
-    Output('clientside-store-figure', 'data'),
-    [dash.dependencies.Input('demo-dropdown', 'value')],
-)
-def update_store_data(value):
-    df = filter_describe_data(yt, value)
-    print(df.to_dict("records"))
-    return df.to_dict('records')
 
-
-# Clientside callback
-app.clientside_callback(
-    """
-       function(data) {
-            if(data === undefined) {
-                return '';
-            }
-            return data;
-        }
-        """,
-    Output('table', 'data'),
-    Input('clientside-store-figure', 'data'),
-    Input('demo-dropdown', 'value')
-)
 
 
 @app.callback(
     dash.dependencies.Output('id-channel-storage', 'data'),
     [dash.dependencies.Input('channel-dropdown', 'value')
-        , dash.dependencies.Input('views/likes', 'value')]
+     ,dash.dependencies.Input('views/likes', 'value')]
 )
-def update_store_data(*value):
+def update_output(*value):
+    X = yt[yt['channel_title'] == value[0]][value[1]]
+
+    return box_channel(X)
+
+
+# # Clientside callback
+app.clientside_callback(
+     """
+
+    function(figure_data) {
+        if(figure_data === undefined) {
+            return {'data': [], 'layout': {}};
+        }
+        const fig = Object.assign({}, figure_data, {
+                'layout': {
+                    ...figure_data.layout
+                    
+                }
+        });
+         return fig;
+         }
+    """,
+    Output('channel_box', 'figure'),
+    Input('id-channel-storage', 'data')
+
+)
+
+
+@app.callback(
+    dash.dependencies.Output('id-channel-storage1', 'data'),
+    [dash.dependencies.Input('channel-dropdown1', 'value')
+        , dash.dependencies.Input('views/likes1', 'value')]
+)
+def update_output(*value):
     X = yt[yt['channel_title'] == value[0]][value[1]]
 
     return box_channel(X)
@@ -312,25 +321,24 @@ def update_store_data(*value):
 app.clientside_callback(
     """
 
-   function(figure_data) {
-       if(figure_data === undefined) {
-           return {'data': [], 'layout': {}};
-       }
-       const fig = Object.assign({}, figure_data, {
-               'layout': {
-                   ...figure_data.layout
-
-               }
-       });
-        return fig;
+    function(figure_data) {
+        if(figure_data === undefined) {
+            return {'data': [], 'layout': {}};
         }
-   """,
-    Output('channel_box', 'figure'),
-    Input('id-channel-storage', 'data')
+        const fig = Object.assign ({},figure_data, {
+                'layout': {
+                    ...figure_data.layout
+                    
+                }
+        });
+         return fig;
+         }
+    """,
+    Output('channel_box1', 'figure'),
+    Input('id-channel-storage1', 'data')
 
 )
 
-#
 # @app.callback(
 #     dash.dependencies.Output('table', 'data'),
 #     [dash.dependencies.Input('demo-dropdown', 'value')]
@@ -338,8 +346,36 @@ app.clientside_callback(
 # def update_output(value):
 #     df = filter_describe_data(yt, value)
 #     return df.to_dict('records')
-# Channel Comparision
+#
 
+# @app.callback(
+#     Output('clientside-store-figure', 'data'),
+#     [dash.dependencies.Input('demo-dropdown', 'value')],
+# )
+# def update_store_data(value):
+#     df = filter_describe_data(yt, value)
+#     print(df.to_dict("records"))
+#     return df.to_dict('records')
+#
+# # Clientside callback
+# app.clientside_callback(
+#     """
+#        function(data) {
+#             if(data === undefined) {
+#                 return '';
+#             }
+#             return data;
+#         }
+#         """,
+#     Output('table', 'data'),
+#     Input('clientside-store-figure', 'data'),
+#     Input('demo-dropdown', 'value')
+#
+#
+# )
+
+# Channel Comparision
+#
 # @app.callback(
 #     dash.dependencies.Output('channel_box', 'figure'),
 #     [dash.dependencies.Input('channel-dropdown', 'value'),
@@ -348,8 +384,6 @@ app.clientside_callback(
 #     X = yt[yt['channel_title'] == value[0]][value[1]]
 #
 #     return box_channel(X)
-#
-#
 # @app.callback(
 #     dash.dependencies.Output('channel_box1', 'figure'),
 #     [dash.dependencies.Input('channel-dropdown1', 'value'),
@@ -359,6 +393,9 @@ app.clientside_callback(
 #
 #     return box_channel(X)
 
+
+
+#
 # @app.callback(
 #     dash.dependencies.Output("time-series-chart", "figure"),
 #     [dash.dependencies.Input("title_name", "value")])
@@ -372,78 +409,7 @@ app.clientside_callback(
 #                       paper_bgcolor='#ADBC6E', xaxis_tickformat='%H:%M <br> %d %B (%a)<br>%Y')
 #
 #     return fig
-
-@app.callback(
-    dash.dependencies.Output('id-channel-storage1', 'data'),
-    [dash.dependencies.Input('channel-dropdown1', 'value')
-        , dash.dependencies.Input('views/likes1', 'value')]
-)
-def update_store_data(*value):
-    X = yt[yt['channel_title'] == value[0]][value[1]]
-
-    return box_channel(X)
-
-
-# # Clientside callback
-app.clientside_callback(
-    """
-
-    function(figure_data) {
-        if(figure_data === undefined) {
-            return {'data': [], 'layout': {}};
-        }
-        const fig = Object.assign ({},figure_data, {
-                'layout': {
-                    ...figure_data.layout
-
-                }
-        });
-         return fig;
-         }
-    """,
-    Output('channel_box1', 'figure'),
-    Input('id-channel-storage1', 'data')
-
-)
-
-
-@app.callback(
-    dash.dependencies.Output("time-series-data", "data"),
-    [dash.dependencies.Input("title_name", "value")])
-def update_store_data(value):
-    Y = yt[yt['title'] == value]
-    Y = Y[Y['views'] > 100000]
-    Y = Y[['trending_date', 'views']]
-    fig = px.line(Y, x='trending_date', y='views')
-    fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
-    fig.update_layout(plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E', xaxis_tickformat='%H:%M <br> %d %B (%a)<br>%Y')
-
-    return fig
-
-
-app.clientside_callback(
-    """
-
-    function(figure_data) {
-        if(figure_data === undefined) {
-            return {'data': [], 'layout': {}};
-        }
-        const fig = Object.assign ({},figure_data, {
-                'layout': {
-                    ...figure_data.layout
-
-                }
-        });
-         return fig;
-         }
-    """,
-    Output('time-series-chart', 'figure'),
-    Input('time-series-data', 'data')
-
-)
-
-
+#
 
 if __name__ == '__main__':
-    app.run_server(port=8083, debug=True, dev_tools_ui=True)
+    app.run_server(port=8082,debug=True,dev_tools_ui=True)
