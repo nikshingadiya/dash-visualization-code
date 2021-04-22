@@ -1,14 +1,17 @@
+import json
 import pickle
 
 import numpy as np
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, Response,jsonify,make_response
 
 from database import create_tabel
-
+import requests
 app = Flask(__name__)
+# app = NoExtRef(app)
 from encoding_input_data import enc_dict
 
 create_tabel()
+
 np.random.seed(25)
 '''['Age',
  'Ease and convenient',
@@ -20,6 +23,16 @@ np.random.seed(25)
  'Good Tracking system',
  'Unaffordable',
  'Maximum wait time']'''
+
+
+def jsonResponseFactory(data):
+    '''Return a callable in top of Response'''
+
+    def callable(response=None, *args, **kwargs):
+        '''Return a response with JSON data from factory context'''
+        return Response(json.dumps(data), 200, mimetype="application/json")
+
+    return callable
 
 
 def encoding_data(enc_dict={}, dec_dict={}):
@@ -50,43 +63,71 @@ def random():
 
 def predction(pred_values):
     model = pickle.load(open('model.pkl', 'rb'))
-    output = model.predict(pred_values)
-    print(output)
-    if (output == 1):
-        return "Yes"
-    else:
-        return "No"
+    output = model.predict_proba(pred_values)
+    print(output[0][1])
+    return float(output[0][1])
 
 
 @app.route('/', methods=['POST', 'GET'])
 def form_submit():
-    y = 0
-    x = 0
+
     if request.method == 'POST':
 
         values = request.form.to_dict()
 
         pre_array = encoding_data(enc_dict, values)
 
-        values['Output'] = predction(pre_array)
+        values['Output'] = round(predction(pre_array), 3)
 
         from database import insert_values
         x = insert_values(values.values())
         y = random()
-        return redirect(url_for('submission', flag=f"{x},{y}"))
+        values['flag'] = f"{x},{y}"
+        k=values.copy()
+
+
+        values = json.dumps(values)
+        path=request.url_root+url_for("submission")
+        # print("Hello",x+url_for("submission"))
+        # ori="http://localhost:8078/submit_sucess"
+        r=requests.post(path, json=k)
+        print("status",r.headers)
+
+
+
+
+        return r.text
     else:
         return render_template('index.html')
 
 
-@app.route('/submit_sucess/<flag>')
-def submission(flag):
-    print(flag)
+@app.route('/submit_sucess', methods=['POST'])
+def submission():
+    print("Nikhil")
+    print(request)
+
+    feedback=request.get_json()
+    print(feedback)
+    # feedback=request.json()
+
+    # print(feedback)
+    # # feedback = feedback.replace("'", "\"")
+    # feedback = json.loads(feedback)
+    flag = feedback['flag']
+    #
     flag = flag.split(",")
-    results = list(map(int, flag))
-    print(results)
+    results = list(map(float, flag))
+    del feedback['flag']
+    #
+    output = float(feedback['Output'])
+    #
+    del feedback['Output']
+    print(type(feedback))
+
+    # return render_template('submit_success.html', feedback=feedback, probability=round(output, 4))
 
     if (results[0] == 1):
-        return render_template('submit_success.html')
+        return render_template('submit_success.html', feedback=feedback, probability=round(output, 4))
     else:
         return render_template('unsuccessful.html')
 
@@ -106,7 +147,7 @@ def login():
 
         from database import get_admin_data
         x = get_admin_data()
-        if (x[0][0] == get_username and x[0][1] == get_password):
+        if x[0][0] == get_username and x[0][1] == get_password:
             return redirect(url_for('fetch_data'))
         else:
             return render_template('invalid.html')

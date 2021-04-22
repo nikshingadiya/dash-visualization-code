@@ -20,6 +20,6 @@ def create_app():
 
 if __name__ == "__main__":
     # app.server is the underlying flask app
-    create_app().run(port="8086", debug=True)
+    create_app().run(port="8096", debug=True)
 
 

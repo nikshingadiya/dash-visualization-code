@@ -5,11 +5,21 @@ import plotly.express as px
 
 import  dash
 from app import app
+
 def channel_label_value_dict(df=None):
+
     channel_list = df['channel_title']
     channel_dict = [{'label': i, 'value': i} for i in channel_list]
 
     return channel_dict
+def make_all_option(yt):
+    all_option={}
+    for i in yt['category'].unique():
+        all_option[i]=yt[yt['category']==i]['channel_title']
+    return all_option
+
+
+
 
 
 # code and plot setup
@@ -34,7 +44,7 @@ def channel_box(yt):
 
                             dcc.Dropdown(
                                 id='channel-dropdown',
-                                options=channel_label_value_dict(yt), optionHeight=35, value="Daily Mail",
+                                options=channel_label_value_dict(yt) , optionHeight=35, value="NAV",
                                 searchable=True,
                                 search_value="",
                                 placeholder="Select a Channel",persistence_type='memory',
@@ -69,7 +79,7 @@ def channel_box(yt):
                         dbc.Col([
                             dcc.Dropdown(
                                 id='channel-dropdown1',
-                                options=channel_label_value_dict(yt), optionHeight=35, value="Daily Mail",
+                                options=channel_label_value_dict(yt), optionHeight=35, value="NAV",
                                 searchable=True,
                                 search_value="",
                                 placeholder="Select a Channel",
@@ -123,6 +133,9 @@ def channel_box(yt):
 
     return ht
 
+def fillter_category(df,category="Music"):
+    df=df[df['category']=="Music"]
+    channel_label_value_dict(df)
 
 def update_box_channel(X=None):
     fig = px.box(X)

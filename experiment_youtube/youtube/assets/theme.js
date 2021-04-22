@@ -1,0 +1,82 @@
+window.theme = {
+   accent:"#FFD15F",
+   accent_negative:"#ff2c6d",
+   accent_positive:"#33ffe6",
+   background_content:"#2d3038",
+   background_page:"#23262E",
+   border:"#53555B",
+   breakpoint_font:"1200px",
+   breakpoint_stack_blocks:"700px",
+   card_border:{
+       width:"0px 0px 0px 0px",
+       style:"solid",
+       color:"#53555B",
+       radius:"0px"
+   },
+   card_background_color:"#2d3038",
+   card_box_shadow:"0px 1px 3px rgba(0,0,0,0.12), 0px 1px 2px rgba(0,0,0,0.24)",
+   card_margin:"15px",
+   card_padding:"5px",
+   card_outline:{
+       width:"0px",
+       style:"solid",
+       color:"#53555B"
+   },
+   card_header_border:{
+       width:"0px 0px 1px 0px",
+       style:"solid",
+       color:"#53555B",
+       radius:"0px"
+   },
+   card_header_background_color:"#2d3038",
+   card_header_box_shadow:"0px 0px 0px rgba(0,0,0,0)",
+   card_header_margin:"0px",
+   card_header_padding:"10px",
+   colorway:[
+       "#ffd15f",
+       "#4c78a8",
+       "#f58518",
+       "#e45756",
+       "#72b7b2",
+       "#54a24b",
+       "#b279a2",
+       "#ff9da6",
+       "#9d755d",
+       "#bab0ac"
+   ],
+   colorscale:[
+       "#440154",
+       "#482878",
+       "#3e4989",
+       "#31688e",
+       "#26828e",
+       "#1f9e89",
+       "#35b779",
+       "#6ece58",
+       "#b5de2b",
+       "#fde725"
+   ],
+   font_family:"Ubuntu Light",
+   font_size:"17px",
+   font_size_smaller_screen:"15px",
+   font_family_header:"Quattrocento Sans",
+   font_size_header:"24px",
+   font_family_headings:"Quattrocento Sans",
+   font_headings_size:null,
+   header_border:{
+       width:"0px 0px 0px 0px",
+       style:"solid",
+       color:"#53555B",
+       radius:"0px"
+   },
+   header_background_color:"#2d3038",
+   header_box_shadow:"0px 1px 3px rgba(0,0,0,0.12), 0px 1px 2px rgba(0,0,0,0.24)",
+   header_margin:"0px 0px 15px 0px",
+   header_padding:"0px",
+   text:"#95969A",
+   report_font_family:"Computer Modern",
+   report_font_size:"12px",
+   report_background_page:"white",
+   report_background_content:"#FAFBFC",
+   report_text:"black"
+}

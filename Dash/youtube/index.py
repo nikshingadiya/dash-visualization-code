@@ -6,13 +6,13 @@ from dash.dependencies import Input, Output
 from app import app
 # Connect to your app pages
 from apps import vgames, bar_youtube
-
+from apps import  youtube_datatable
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div([
-        dcc.Link('Video Games|', href='/apps/vgames'),
-        dcc.Link('Youtube', href='/apps/bar_youtube'),
-    ], className="row"),
+        dcc.Link('   Youtube DataTable|', href='/apps/youtube_datatable'),
+        dcc.Link('   Youtube', href='/apps/bar_youtube'),
+    ], className="row",style={'marginLeft': 25, 'marginTop': 0}),
     html.Div(id='page-content', children=[]),
 
 ])
@@ -21,12 +21,12 @@ app.layout = html.Div([
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/apps/vgames':
-        return vgames.layout
+    if pathname == '/apps/youtube_datatable':
+        return youtube_datatable.layout
     if pathname == '/apps/bar_youtube':
         return bar_youtube.layout
     else:
-        return bar_youtube.layout
+        return youtube_datatable.layout
 
 
 #

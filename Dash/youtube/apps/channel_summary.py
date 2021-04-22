@@ -49,24 +49,28 @@ def filter_describe_data(df=None, channel_name=None):
     df = df[df['channel_title'] == channel_name]
     df = df.drop(['category_id'], axis=1)
     df = df.describe().drop(['25%', '75%'], axis=0)
-    df['measurement'] = df.index
+    df.loc[:,'measurement'] = df.index
     df = df.round(0)
     df = df.reset_index(0, drop=True)
     df = df[['measurement', 'views', 'likes', 'comment_count', 'dislikes']]
     # df = df[df['measurement'] == '50%'] = 'median'
+
 
     return df
 
 
 def channel_label_value_dict(df=None):
     channel_list = df['channel_title']
+
     channel_dict = [{'label': i, 'value': i} for i in channel_list]
+
 
     return channel_dict
 
 
 def stastics_table(yt):
-    df = filter_describe_data(yt, "Daily Mail")
+    df = filter_describe_data(yt, "NAV")
+    print(df)
     return layout_return(yt, df)
 
 
@@ -82,7 +86,7 @@ def layout_return(yt, df):
 
                     dcc.Dropdown(
                         id='demo-dropdown',
-                        options=channel_label_value_dict(yt), optionHeight=35, value="Daily Mail",
+                        options=channel_label_value_dict(yt), optionHeight=35, value="NAV",
                         searchable=True,
                         search_value="",
                         placeholder="Select a Channel",
@@ -149,4 +153,5 @@ def layout_return(yt, df):
             body=True
         )
     )
+
     return ht

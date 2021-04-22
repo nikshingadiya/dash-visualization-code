@@ -2,7 +2,7 @@ import time
 from timeit import default_timer as timer
 s = time.time()
 import re
-import modin.pandas as pd
+# import modin.pandas as pd
 import dash
 from dash.dependencies import Input, Output,State
 import dash_bootstrap_components as dbc

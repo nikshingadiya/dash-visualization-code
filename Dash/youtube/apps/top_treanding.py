@@ -29,8 +29,12 @@ def top_10_trending_videos(df=None):
     fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 5000
     fig.layout.updatemenus[0].buttons[0].args[1]["transition"]["duration"] = 5000
 
-    fig['layout']['updatemenus'][0]['pad'] = dict(r=5, t=60)
-    fig['layout']['sliders'][0]['pad'] = dict(r=5, t=40)
+    fig['layout']['updatemenus'][0]['pad'] = dict(r=10, t=50)
+    fig['layout']['sliders'][0]['pad'] = dict(r=10, t=30, b=20)
+    fig.layout.sliders[0].font = dict(family="Overpass", size=18, color="blue")
+    fig.layout.sliders[0].activebgcolor = "red"
+    fig.layout.sliders[0].borderwidth = 5
+    fig.layout.sliders[0].bgcolor = "blue"
     fig.update_traces(textposition='auto')
 
     ht = html.Div(

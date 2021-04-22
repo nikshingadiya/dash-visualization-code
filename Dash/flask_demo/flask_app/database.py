@@ -15,7 +15,7 @@ except:
 def create_tabel():
     con = mydb.cursor()
 
-    sql = "CREATE TABLE IF NOT EXISTS customers_feedback(" \
+    sql = "CREATE TABLE IF NOT EXISTS customers_feedback4(" \
           "customer_id INTEGER PRIMARY KEY  NOT NULL AUTO_INCREMENT," \
           "Age Int NOT NULL," \
           "Ease_and_convenient VARCHAR(255) NOT NULL," \
@@ -27,7 +27,7 @@ def create_tabel():
           "Good_Tracking_system VARCHAR(255) NOT NULL," \
           "Unaffordable VARCHAR(255) NOT NULL," \
           "Maximum_wait_time VARCHAR(255) NOT NULL," \
-          "Output VARCHAR(255) NOT NULL)"
+          "Output FLOAT NOT NULL)"
 
     con.execute(sql)
 
@@ -37,8 +37,8 @@ def insert_values(data):
     print(data)
     con = mydb.cursor()
     try:
-        # sql ="insert into customers_feedback values(Null,?,?,?,?,?,?,?,?,?,?,?)"
-        sql = "insert into customers_feedback(" \
+        # sql ="insert into customers_feedback3 values(?,?,?,?,?,?,?,?,?,?)"
+        sql = "insert into customers_feedback3(" \
               "Age,Ease_and_convenient,Time_saving," \
               "More_restaurant_choices,Easy_Payment_option," \
               "More_Offers_and_Discount," \
@@ -53,10 +53,10 @@ def insert_values(data):
         print("Data Entery complete")
         con.close()
         return 1
-    except:
-        print("Data Entery not complete")
-        con.rollback()
-        return 0
+    except Exception as e:
+        print(e)
+        con.close()
+        return
 
 
 
@@ -64,7 +64,7 @@ def insert_values(data):
 def get_data():
     try:
         con = mydb.cursor()
-        sql = "select * from customers_feedback;"
+        sql = "select * from customers_feedback3;"
         x=con.execute(sql)
         data =con.fetchall()
         field_names = [i[0] for i in con.description]

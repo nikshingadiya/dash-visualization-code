@@ -4,6 +4,7 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import numpy as np
 import pandas as pd
 import plotly.express as px
 from dash.dependencies import Input, Output
@@ -12,21 +13,18 @@ from app import app
 from channel_comparision import update_box_channel, channel_box
 from channel_summary import filter_describe_data
 from channel_summary import stastics_table
-from filtter_data import clean_data
 from most_like_static import most_likes_video, most_views_video
+from select_category import drop_down_category
 from top_treanding import top_10_trending_videos
 from view_analysis_date import view_analysis
-
-from flask_caching import Cache
 
 pd.set_option('display.max_columns', 30)
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../data").resolve()
 yt = pd.DataFrame()
-for chunk in pd.read_csv(DATA_PATH.joinpath("CAvideos.csv"), chunksize=10000):
+for chunk in pd.read_csv(DATA_PATH.joinpath("CAvideos1.csv"), chunksize=10000):
     yt = pd.concat([yt, chunk])
-
-yt = clean_data(yt)
+    break
 
 
 # print(yt.head())
@@ -90,6 +88,14 @@ layout = html.Div([
                     ),
                 ], align='center'),
                 html.Br(),
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            drop_down_category(yt)
+                        ], width={'size': 12}
+                    )
+                ),
+                html.Br(),
                 dbc.Row
                     (
                     dbc.Col(
@@ -100,6 +106,7 @@ layout = html.Div([
 
                 ),
                 html.Br(),
+
                 dbc.Row
                     (
                     dbc.Col(
@@ -112,7 +119,9 @@ layout = html.Div([
 
             ]
         ), color='grey'
-    ), dcc.Store(
+    ),
+
+    dcc.Store(
         id='clientside-store-figure', data={}
     ),
     dcc.Store("id-channel-storage", data={}),
@@ -129,6 +138,7 @@ layout = html.Div([
 def update_store_data(value):
     df = filter_describe_data(yt, value)
     print(df.to_dict("records"))
+
     return df.to_dict('records')
 
 
@@ -148,10 +158,12 @@ app.clientside_callback(
 )
 
 
+## box plot
 @app.callback(
     dash.dependencies.Output('id-channel-storage', 'data'),
     [dash.dependencies.Input('channel-dropdown', 'value')
-        , dash.dependencies.Input('views/likes', 'value')]
+        , dash.dependencies.Input('views/likes', 'value'),
+     dash.dependencies.Input('category_name', 'value')]
 )
 def update_store_data(*value):
     X = yt[yt['channel_title'] == value[0]][value[1]]
@@ -225,10 +237,15 @@ app.clientside_callback(
 #
 #     return fig
 
+# @app.callback():
+#     dash.dependencies.Output('id-channel-storage1', 'data')
+#   dash.dependencies.Input('category_name', 'value')
+
 @app.callback(
     dash.dependencies.Output('id-channel-storage1', 'data'),
     [dash.dependencies.Input('channel-dropdown1', 'value')
-        , dash.dependencies.Input('views/likes1', 'value')]
+        , dash.dependencies.Input('views/likes1', 'value'),
+     ]
 )
 def update_store_data(*value):
     X = yt[yt['channel_title'] == value[0]][value[1]]
@@ -259,14 +276,17 @@ app.clientside_callback(
 )
 
 
+# box plot
+
 @app.callback(
     dash.dependencies.Output("time-series-data", "data"),
     [dash.dependencies.Input("title_name", "value")])
 def update_view_analysis(value):
     Y = yt[yt['title'] == value]
-    Y = Y[Y['views'] > 100000]
-    Y = Y[['trending_date', 'views']]
-    fig = px.line(Y, x='trending_date', y='views')
+    Y.loc[:, 'views_log10_scale'] = np.log10(Y['views'])
+
+    Y = Y[['trending_date', 'views_log10_scale']]
+    fig = px.line(Y, x='trending_date', y='views_log10_scale')
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
     fig.update_layout(plot_bgcolor='#673435',
                       paper_bgcolor='#ADBC6E', xaxis_tickformat='%H:%M <br> %d %B (%a)<br>%Y')
