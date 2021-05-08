@@ -6,13 +6,14 @@ from dash.dependencies import Input, Output
 from app import app
 # Connect to your app pages
 from apps import bar_youtube
-from apps import  youtube_datatable
+from apps import youtube_datatable
+
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div([
         dcc.Link('   Youtube DataTable|', href='/apps/youtube_datatable'),
         dcc.Link('   Youtube', href='/apps/bar_youtube'),
-    ], className="row",style={'marginLeft': 25, 'marginTop': 0}),
+    ], className="row", style={'marginLeft': 25, 'marginTop': 0}),
     html.Div(id='page-content', children=[]),
 
 ])
@@ -29,6 +30,5 @@ def display_page(pathname):
         return youtube_datatable.layout
 
 
-
 if __name__ == '__main__':
-    app.run_server(port=8083, debug=True, dev_tools_ui=True)
+    app.run_server(port=8086, debug=True, dev_tools_ui=True)

@@ -21,7 +21,7 @@ def drop_down_category(yt):
                 dbc.CardBody
 
                     (
-                    [html.H3("Videos Category ", className="card-title"),
+                    [html.H3("Videos Category ", className="card-title",style={"color":"#1E1E35"}),
                     dcc.Dropdown(
                         id="category_name",persistence_type='memory',
                         options=[{"label": x, "value": x}
@@ -36,7 +36,7 @@ def drop_down_category(yt):
                     ),
 
                 ]
-                ), style={"backgroundColor": "#082255", 'textAlign': 'center',"borderRadius": "20px"}
+                ), style={"backgroundColor": "#EAE6EA", 'textAlign': 'center',"borderRadius": "20px"}
             )
         )
     return ht

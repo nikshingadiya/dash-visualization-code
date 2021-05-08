@@ -14,7 +14,7 @@ def filter_describe_data(df=None, channel_name=None):
     df = df.reset_index(0, drop=True).copy()
     df = df[['measurement', 'views', 'likes', 'comment_count', 'dislikes']].copy()
     # df = df[df['measurement'] == '50%'] = 'median'
-    print(df)
+
 
     return df
 
@@ -39,7 +39,7 @@ def layout_return(yt, df):
 
                 (
                 [
-                    html.H3("Channel Stastics"),
+                    html.H3("Channel Stastics",style={"color":"#white"}),
 
                     dcc.Dropdown(
                         id='demo-dropdown',
@@ -69,7 +69,7 @@ def layout_return(yt, df):
                                                  'if': {
                                                      'state': 'active'  # 'active' | 'selected'
                                                  },
-                                                 'backgroundColor': '#393E3E',
+                                                 'backgroundColor': '#EAE6EA',#082255
                                                  'border': "1px solid #393E3E"
 
                                              } for i in df.columns
@@ -100,14 +100,14 @@ def layout_return(yt, df):
                                              'fontWeight': 'bold',
                                               "color":"black",
                                          },
-                                         style_data={'border': '#393E3', 'backgroundColor': '#393E3E ',
+                                         style_data={'border': '#393E3', 'backgroundColor': '#EAE6EA',
                                                      'lineHeight': '20px',
-                                                     'color': '#D0D3D4'},
+                                                     'color': '#191929'},
                                          style_cell={'overflow': 'hidden', 'padding': '5px',
                                                      'minheight': 1200, 'minWidth': 125}
                                          )
                 ]
-            ), style={"height": "540px", "borderRadius": "20px", "backgroundColor": "#082255", 'textAlign': 'center', "padding": "5px", },
+            ), style={"height": "540px", "borderRadius": "20px", "backgroundColor": "#EAE6EA", 'textAlign': 'center', "padding": "5px", },
             body=True
         )
     )

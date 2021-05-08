@@ -15,9 +15,10 @@ from channel_summary import filter_describe_data
 from channel_summary import stastics_table
 from most_like_static import most_likes_video, most_views_video
 from select_category import drop_down_category
+from select_category import make_all_option
 from top_treanding import top_10_trending_videos
 from view_analysis_date import view_analysis
-from select_category import  make_all_option
+
 pd.set_option('display.max_columns', 30)
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../data").resolve()
@@ -26,7 +27,7 @@ for chunk in pd.read_csv(DATA_PATH.joinpath("CAvideos1.csv"), chunksize=10000):
     yt = pd.concat([yt, chunk])
     break
 
-
+# yt = yt.sample(frac=0.05, replace=False)
 # print(yt.head())
 
 
@@ -38,10 +39,10 @@ def main_title():
 
                 (
                 [
-                    html.H1("Youtube Analysis ", className="text-center mb-4"),
+                    html.H1("Youtube Analysis ", className="text-center mb-4", style={"color": "#1E1E35"}),
 
                 ]
-            ), style={"backgroundColor": "#082255","borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA", "borderRadius": "20px"}
         )
     )
     return ht
@@ -118,7 +119,7 @@ layout = html.Div([
                 )
 
             ]
-        ), color='grey',style={"borderRadius": "20px"}
+        ), color='white', style={"borderRadius": "20px"} #22336bc9
     ), dcc.Store(
         id='clientside-store-figure', data={}
     ),
@@ -128,30 +129,30 @@ layout = html.Div([
 
 ])
 
+
 ## CategoryWise Update BoxPlot
 
 @app.callback(
-    Output("channel-dropdown",'options'),
+    Output("channel-dropdown", 'options'),
 
-    Input("category_name",'value')
-
+    Input("category_name", 'value')
 
 )
 def update_options(value):
     print(list(make_all_option(yt)[value]))
     return [{'label': i, 'value': i} for i in (make_all_option(yt)[value])]
 
-@app.callback(
-    Output("channel-dropdown1",'options'),
 
-    Input("category_name",'value')
+@app.callback(
+    Output("channel-dropdown1", 'options'),
+
+    Input("category_name", 'value')
 )
 def update_options(value):
-
     return [{'label': i, 'value': i} for i in (make_all_option(yt)[value])]
 
-## CategoryWise Update BoxPlot
 
+## CategoryWise Update BoxPlot
 
 
 ### channale_summary_statistics
@@ -181,6 +182,7 @@ app.clientside_callback(
     Input('clientside-store-figure', 'data'),
     Input('demo-dropdown', 'value')
 )
+
 
 ### channale_summary_statistics
 
@@ -314,9 +316,11 @@ def update_view_analysis(value):
 
     Y = Y[['trending_date', 'views_log10_scale']]
     fig = px.line(Y, x='trending_date', y='views_log10_scale')
+    fig.update_xaxes(showgrid=False)
+    fig.update_traces(line=dict(color="#3F64D8", width=5))
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
-    fig.update_layout(plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E', xaxis_tickformat='%H:%M <br> %d %B (%a)<br>%Y')
+    fig.update_layout(plot_bgcolor='#C1C3D4',
+                      paper_bgcolor='#EAE6EA', xaxis_tickformat='%H:%M <br> %d %B (%a)<br>%Y')
 
     return fig
 
@@ -350,7 +354,7 @@ app.clientside_callback(
 #         all_option[i]=yt[yt['category']==i]['channel_title']
 #     return all_option
 #
-# @app.callback(Output("channel-dropdown","children"),
+# @app.callback(Outnput("channel-dropdown","children"),
 #               [
 #                   dash.dependencies.Input("category_name","value")
 #               ]

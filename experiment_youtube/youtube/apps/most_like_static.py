@@ -21,8 +21,8 @@ def most_likes_video(df_data=None):
 
     fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
-    fig.update_layout(plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E')
+    fig.update_layout(plot_bgcolor='#C1C3D4',
+                      paper_bgcolor='#EAE6EA')
     fig.update_yaxes(
         ticksuffix=" ",
         # showline=True, linewidth=3,linecolor='black'
@@ -35,10 +35,10 @@ def most_likes_video(df_data=None):
 
                 (
                 [
-                    html.H3("Likes vs Videos", className="card-title"),
+                    html.H3("Likes vs Videos", className="card-title",style={"color":"#0E0E1B"}),
                     dcc.Graph(figure=fig)
                 ]
-            ), style={"backgroundColor": "#082255", 'textAlign': 'center',"borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA", 'textAlign': 'center',"borderRadius": "20px"}
         )
     )
 
@@ -57,8 +57,8 @@ def most_views_video(df_data=None):
                  hover_data={'views': True, 'title': True, 'video_short_names': False})
     fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
-    fig.update_layout(plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E', )
+    fig.update_layout(plot_bgcolor='#C1C3D4',
+                      paper_bgcolor='#EAE6EA', )
     fig.update_yaxes(
         ticksuffix=" ",
         # showline=True, linewidth=3,linecolor='black'
@@ -71,10 +71,10 @@ def most_views_video(df_data=None):
 
                 (
                 [
-                    html.H3("Views vs Videos", className="card-title"),
+                    html.H3("Views vs Videos", className="card-title",style={"color":"#0E0E1B"}),
                     dcc.Graph(figure=fig)
                 ]
-            ), style={"backgroundColor": "#082255", 'textAlign': 'center',"borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA", 'textAlign': 'center',"borderRadius": "20px"}
         )
     )
     return ht

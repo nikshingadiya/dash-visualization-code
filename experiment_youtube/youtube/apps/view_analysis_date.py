@@ -11,7 +11,7 @@ def view_analysis(yt):
             dbc.CardBody
 
                 (
-                [html.H3("Treanding Date vs Views(videos)", className="card-title"),
+                [html.H3("Treanding Date vs Views(videos)", className="card-title",style={"color":"#0E0E1B"}),
                 dcc.Dropdown(
                     id="title_name",persistence_type='memory',
                     options=[{"label": x, "value": x}
@@ -27,7 +27,7 @@ def view_analysis(yt):
                 html.Br(),
                 dcc.Graph(id="time-series-chart"),
             ]
-            ), style={"backgroundColor": "#082255", 'textAlign': 'center',"borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA", 'textAlign': 'center',"borderRadius": "20px"}
         )
     )
 

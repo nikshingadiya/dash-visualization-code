@@ -6,7 +6,7 @@ import dash_table
 import pandas as pd
 
 from filtter_data import clean_data
-
+import dash_bootstrap_components as dbc
 pd.set_option('display.max_columns', 30)
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../data").resolve()
@@ -18,7 +18,10 @@ for chunk in pd.read_csv(DATA_PATH.joinpath("CAvideos1.csv"), chunksize=10000):
 df=yt.copy()
 
 
-layout = html.Div([
+layout = dbc.Card(
+
+    dbc.CardBody(
+        html.Div([
 
     dash_table.DataTable(
         id='Table',
@@ -79,6 +82,9 @@ layout = html.Div([
     ),
 
 ])
+    ), color='grey'
+)
 
-if __name__ == '__main__':
-    app.run_server(host='127.0.0.1', port=8050, debug=True)
+#
+# if __name__ == '__main__':
+#     app.run_server(host='127.0.0.1', port=8050, debug=True)

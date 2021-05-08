@@ -16,15 +16,19 @@ def top_10_trending_videos(df=None):
                  animation_frame='t_date',
 
                  color='likes/views',
-                 color_continuous_scale=px.colors.sequential.haline,
+                 color_continuous_scale=px.colors.sequential.Purples,
 
                  text='likes/views',
                  orientation='h', range_x=(0, 0.6),
                  )
-    fig.update_layout(margin=dict(t=40, b=0, l=0, r=0), plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E')
+    fig.update_layout(margin=dict(t=40, b=0, l=0, r=0), plot_bgcolor='#C1C3D4',
+                      paper_bgcolor='#EAE6EA')
 
     fig.update_yaxes(automargin=True)
+
+    # fig.update_xaxes(showgrid=False)
+
+
 
     fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 5000
     fig.layout.updatemenus[0].buttons[0].args[1]["transition"]["duration"] = 5000
@@ -34,7 +38,7 @@ def top_10_trending_videos(df=None):
     fig.layout.sliders[0].font = dict(family="Overpass", size=18, color="blue")
     fig.layout.sliders[0].activebgcolor = "red"
     fig.layout.sliders[0].borderwidth = 5
-    fig.layout.sliders[0].bgcolor = "blue"
+    fig.layout.sliders[0].bgcolor = "#9192FF"
     fig.update_traces(textposition='auto')
 
     ht = html.Div(
@@ -44,10 +48,10 @@ def top_10_trending_videos(df=None):
 
                 (
                 [
-                    html.H3("Treanding Videos With Date", className="card-title"),
+                    html.H3("Treanding Videos With Date", className="card-title",style={"color":"#0E0E1B"}),
                     dcc.Graph(figure=fig)
                 ]
-            ), style={"backgroundColor": "#082255", 'textAlign': 'center',"borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA", 'textAlign': 'center',"borderRadius": "20px"}
         )
     )
     return ht

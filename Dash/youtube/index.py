@@ -2,10 +2,10 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-# Connect to main app.py file
+# Connect to main tree.py file
 from app import app
 # Connect to your app pages
-from apps import vgames, bar_youtube
+from apps import bar_youtube
 from apps import  youtube_datatable
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -29,6 +29,6 @@ def display_page(pathname):
         return youtube_datatable.layout
 
 
-#
-# if __name__ == '__main__':
-#     app.run_server(port=8083, debug=True, dev_tools_ui=True)
+
+if __name__ == '__main__':
+    app.run_server(port=9099, debug=True, dev_tools_ui=True)

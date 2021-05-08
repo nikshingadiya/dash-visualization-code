@@ -115,9 +115,9 @@ def channel_box(yt):
                     ], width={'size': 6})
                 ]
                 )
-            ],style={"backgroundColor": "#082255", 'textAlign': 'center', "borderRadius": "20px",}),
+            ],style={"backgroundColor": "#EAE6EA", 'textAlign': 'center', "borderRadius": "20px",}),
 
-        ],style={ "borderRadius": "24px","backgroundColor": "#082255"})
+        ],style={ "borderRadius": "24px","backgroundColor": "#EAE6EA"})
 
     ],)
 
@@ -127,7 +127,8 @@ def channel_box(yt):
 
 
 def update_box_channel(X=None):
-    fig = px.box(X)
+    fig = px.box(X,points="all")
+    fig.update_traces(fillcolor="#6776FF")
 
     #     fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
@@ -138,7 +139,8 @@ def update_box_channel(X=None):
         # showline=True, linewidth=3,linecolor='black'
     )
     fig.update_layout(margin=(dict(l=0, r=0, b=0, t=30)))
-    fig.update_layout(plot_bgcolor='#673435',
-                      paper_bgcolor='#ADBC6E', )
+    fig.update_layout(plot_bgcolor='#C1C3D4',
+                      paper_bgcolor='#EAE6EA', )
+    fig.update_yaxes(showgrid=False)
 
     return fig
