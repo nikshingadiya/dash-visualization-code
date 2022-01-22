@@ -42,7 +42,7 @@ def main_title():
                     html.H1("Youtube Analysis ", className="text-center mb-4", style={"color": "#1E1E35"}),
 
                 ]
-            ), style={"backgroundColor": "#EAE6EA", "borderRadius": "20px"}
+            ), style={"backgroundColor": "#EAE6EA","borderRadius": "20px"}
         )
     )
     return ht
